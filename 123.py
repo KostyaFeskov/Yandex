@@ -1,0 +1,94 @@
+import datetime
+from decimal import Decimal
+DATE_FORMAT = '%Y-%m-%d'
+
+goods = {
+    'Пельмени Универсальные': [
+        {'amount': Decimal('0.5'), 'expiration_date': datetime.date(2023, 12, 29)},
+        {'amount': Decimal('2'), 'expiration_date': datetime.date(2023, 12, 28)}
+    ],
+    'Вода': [{'amount': Decimal('1.5'), 'expiration_date': None}],
+    'Яйца': [{'amount': Decimal('1'), 'expiration_date': datetime.date(2023, 6, 24)}],
+    'Яйца гусиные': [{'amount': Decimal('4'), 'expiration_date': datetime.date(2023, 7, 15)}],
+    'Морковь': [{'amount': Decimal('2'), 'expiration_date': datetime.date(2023, 8, 6)}]
+}
+
+
+def add(items, title, amount, expiration_date=None):
+    if expiration_date is not None:
+        date_date = datetime.datetime.strptime(f'{expiration_date}', '%Y-%m-%d').date()
+    else:
+        date_date = None
+    add_in_title = {'amount': amount, 'expiration_date': date_date}
+
+    if title in items:
+        items[title].append(add_in_title)
+    else:
+        items[title] = [add_in_title]
+    return items
+
+
+def add_by_note(items, note):
+    new_note = str.split(note, ' ')
+    date_check = new_note[len(new_note) - 1]
+    if '-' in date_check and len(new_note) == 3:
+        title = new_note[0]
+        amount = Decimal(new_note[1])
+        expiration_date = datetime.datetime.strptime(new_note[len(new_note) - 1], '%Y-%m-%d').date()
+        return add(items, title, amount, expiration_date)
+    elif '-' in date_check and len(new_note) > 3:
+        b = []
+        for i in range(len(new_note) - 2):
+            list.append(b, new_note[i])
+        pass
+        title = ' '.join(b)
+        amount = Decimal(new_note[len(new_note) - 2])
+        expiration_date = datetime.datetime.strptime(str(new_note[len(new_note) - 1]), '%Y-%m-%d').date()
+        return add(items, title, amount, expiration_date)
+    else:
+        b = []
+        for i in range(len(new_note) - 1):
+            list.append(b, new_note[i])
+        pass
+        title = ' '.join(b)
+        amount = Decimal(new_note[len(new_note) - 1])
+        return add(items, title, amount)
+
+
+def find(items, needle):
+    result = []
+    for i in items:
+        if needle.lower() in i.lower():
+            list.append(result, i)
+    return result
+
+
+def amount(items, needle):
+    count = Decimal('0')
+    for i in items:
+        if needle.lower() in i.lower():
+            b = items[i]
+            for c in b:
+                count += c['amount']
+    return count
+
+
+def expire(items, in_advance_days=0):
+
+    today = datetime.date.today()
+    date_to_compare = today + datetime.timedelta(days=in_advance_days)
+
+    list_of_expired_goods = []
+
+    for item, param_list in dict.items(items):
+        counter = Decimal('0')
+        for param_set in param_list:
+            if param_set.get('expiration_date') and param_set.get('expiration_date') <= date_to_compare:
+                counter += param_set.get('amount')
+        if counter:
+            _tmp_tuple = item, counter
+            list_of_expired_goods.append(_tmp_tuple)
+
+    return list_of_expired_goods
+
+
